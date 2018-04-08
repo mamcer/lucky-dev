@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuckyDev", "LuckyDev\LuckyDev.csproj", "{F2EE8EC2-37D0-4CD7-8155-7CD447F60AB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuckyDev.Test", "LuckyDev.Test\LuckyDev.Test.csproj", "{7EDAD86B-E77B-4E49-AE1A-14CE70FDDB05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{597585CF-8A3F-47A5-8F81-71DAFA5BCE7B}"
+	ProjectSection(SolutionItems) = preProject
+		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
+		LuckyDev.vsmdi = LuckyDev.vsmdi
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://hxtfs02:8080/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = LuckyDev\\LuckyDev.csproj
+		SccProjectName1 = LuckyDev
+		SccLocalPath1 = LuckyDev
+		SccProjectUniqueName2 = LuckyDev.Test\\LuckyDev.Test.csproj
+		SccProjectName2 = LuckyDev.Test
+		SccLocalPath2 = LuckyDev.Test
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = LuckyDev.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F2EE8EC2-37D0-4CD7-8155-7CD447F60AB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2EE8EC2-37D0-4CD7-8155-7CD447F60AB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2EE8EC2-37D0-4CD7-8155-7CD447F60AB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2EE8EC2-37D0-4CD7-8155-7CD447F60AB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EDAD86B-E77B-4E49-AE1A-14CE70FDDB05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EDAD86B-E77B-4E49-AE1A-14CE70FDDB05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EDAD86B-E77B-4E49-AE1A-14CE70FDDB05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EDAD86B-E77B-4E49-AE1A-14CE70FDDB05}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

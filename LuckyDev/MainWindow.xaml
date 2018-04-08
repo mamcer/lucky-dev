@@ -1,0 +1,103 @@
+﻿<Window x:Class="LuckyDev.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:AvalonControls="clr-namespace:Avalon.Windows.Controls;assembly=AvalonLibrary"
+    Title="Los Reviews" Height="360" Width="574" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" FontFamily="Lucida Sans Unicode" FontSize="13" AllowsTransparency="True" Background="Transparent" WindowStyle="None" MouseLeftButtonDown="Window_MouseLeftButtonDown" Closing="Window_Closing">
+    <Window.Resources>
+        <Storyboard x:Key="StartupAnimation">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0.18"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="-0.106"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0.108"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="1"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[0].(GradientStop.Color)">
+            	<SplineColorKeyFrame KeyTime="00:00:00" Value="Black"/>
+            	<SplineColorKeyFrame KeyTime="00:00:00.5000000" Value="#FF949494"/>
+            </ColorAnimationUsingKeyFrames>
+            <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="lblAbout" Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)">
+            	<SplineColorKeyFrame KeyTime="00:00:00.5000000" Value="#FFFEFEFE"/>
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource StartupAnimation}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    <Border BorderThickness="1" BorderBrush="Black" CornerRadius="7" Padding="2,0,2,2" Opacity="1" x:Name="border" RenderTransformOrigin="0.5,0.5">
+    	<Border.Background>
+    		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+    			<GradientStop Color="#FF949494" Offset="0"/>
+    			<GradientStop Color="White" Offset="1"/>
+    		</LinearGradientBrush>
+    	</Border.Background>
+        <Border.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                <SkewTransform AngleX="0" AngleY="0"/>
+                <RotateTransform Angle="0"/>
+                <TranslateTransform X="0" Y="0"/>
+            </TransformGroup>
+        </Border.RenderTransform>
+         <Grid>
+            <Button Height="23" Margin="12,0,0,7" VerticalAlignment="Bottom" Click="BtnLuckyDev_Click" HorizontalAlignment="Left" Width="139" x:Name="btnLuckyDev" Content="The Winner is" IsEnabled="False" VerticalContentAlignment="Center" />
+            <ListBox Margin="12,0,10,37" Name="lstNoCodeReviews" Background="{x:Null}" VerticalAlignment="Bottom" Height="125" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" >
+            </ListBox>
+            <Label Height="33" Margin="8,6,0,0" Name="label1" VerticalAlignment="Top" FontSize="17.333" HorizontalAlignment="Left" Width="261">
+            	<Label.Effect>
+            		<DropShadowEffect Color="White" Direction="0" BlurRadius="10" ShadowDepth="0"/>
+            	</Label.Effect>Top 5 de reviews pendientes</Label>
+            <Label Height="28" Margin="12,41,219,0" x:Name="top01" VerticalAlignment="Top" Background="{x:Null}" Content="" Foreground="White">
+            	<Label.Effect>
+            		<DropShadowEffect BlurRadius="10" Color="Red" Direction="0" ShadowDepth="0"/>
+            	</Label.Effect>
+            </Label>
+            <Label Height="28" Margin="12,62,219,0" x:Name="top02" VerticalAlignment="Top" Foreground="White" Content="">
+            	<Label.Effect>
+            		<DropShadowEffect Direction="0" ShadowDepth="0" Color="#FFFB7400" BlurRadius="10"/>
+            	</Label.Effect></Label>
+            <Label Height="28" Margin="12,87,219,0" x:Name="top03" VerticalAlignment="Top" Foreground="White" Content="">
+            	<Label.Effect>
+            		<DropShadowEffect Direction="0" ShadowDepth="0" Color="#FFFBFF00" BlurRadius="10"/>
+            	</Label.Effect></Label>
+            <Label Height="28" Margin="12,112,219,0" x:Name="top04" VerticalAlignment="Top" Content="" Foreground="White"/>
+            <Label Height="28" Margin="12,135,219,0" x:Name="top05" VerticalAlignment="Top" Content="" Foreground="White"/>
+            <Label Margin="12,160,0,166" Name="label6" FontSize="14.667" HorizontalAlignment="Left" Width="232">
+            	<Label.Effect>
+            		<DropShadowEffect BlurRadius="10" Direction="0" ShadowDepth="0" Color="White"/>
+            	</Label.Effect>Personas sin review asignado</Label>
+            <Label Height="30" Margin="159,0,8,3" x:Name="lblWinnerIs" VerticalAlignment="Bottom" FontSize="15" FontStyle="Italic" />
+            <Button Height="20" HorizontalAlignment="Right" Margin="0,5,29,0" Name="btnMinimize" VerticalAlignment="Top" Width="20" Click="Button1_Click" FontFamily="Webdings" Background="{x:Null}">0</Button>
+            <Button Height="20" HorizontalAlignment="Right" Margin="0,5,6,0" Name="btnClose" VerticalAlignment="Top" Width="20" Click="Button2_Click" FontFamily="Webdings" BorderThickness="0" Background="{x:Null}">r</Button>
+            <Label Height="28" HorizontalAlignment="Right" Margin="0,1.833,75,0" x:Name="lblAbout" VerticalAlignment="Top" Width="65" Foreground="White" FontSize="11" Cursor="Hand" Background="Transparent" MouseDown="LblAbout_MouseDown">Acerca de</Label>
+            <Label Height="28" HorizontalAlignment="Right" Margin="0,1.833,141,0" x:Name="lblUpdate" VerticalAlignment="Top" Width="65" Foreground="White" FontSize="11" Cursor="Hand" Background="Transparent" MouseDown="LblUpdate_MouseDown" >Actualizar</Label>
+            <AvalonControls:NotifyIcon x:Name="notifyIcon" Icon="/LuckyDev;component/ico.ico" MouseDoubleClick="NotifyIcon_MouseDoubleClick" Visibility="Hidden">
+                <FrameworkElement.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Mostrar" FontWeight="Bold" Click="MIShow_Click"/>
+                        <MenuItem Header="Dame un reviewer" Click="MIReviewer_Click"/>
+                        <MenuItem Header="Acerca de" Click="MIAbout_Click"/>
+                        <MenuItem Header="Iniciar con Windows" x:Name="MIStartWithWindows" IsCheckable="True" Click="StartWithWindows_Click"/>
+                        <MenuItem Header="Salir" Click="MIExit_Click"/>
+                    </ContextMenu>
+                </FrameworkElement.ContextMenu>
+            </AvalonControls:NotifyIcon>
+            <Button Background="{x:Null}" FontFamily="Webdings" Height="20" HorizontalAlignment="Right" Margin="0,5,53,0" Name="btnToSystray" VerticalAlignment="Top" Width="20" Click="BtnToSystray_Click">6</Button>
+        </Grid>
+    </Border>
+</Window>
