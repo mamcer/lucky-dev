@@ -135,12 +135,9 @@ namespace LuckyDev
         {
             get
             {
-                if (_store == null)
+                if (_store == null && TfsServer != null)
                 {
-                    if (TfsServer != null)
-                    {
-                        _store = (WorkItemStore)TfsServer.GetService(typeof(WorkItemStore));
-                    }
+                    _store = (WorkItemStore) TfsServer.GetService(typeof(WorkItemStore));
                 }
 
                 return _store;
@@ -151,12 +148,9 @@ namespace LuckyDev
         {
             get
             {
-                if (_project == null)
+                if (_project == null && TfsItemStore != null)
                 {
-                    if (TfsItemStore != null)
-                    {
-                        _project = TfsItemStore.Projects[TfsProjectName];
-                    }
+                    _project = TfsItemStore.Projects[TfsProjectName];
                 }
 
                 return _project;
