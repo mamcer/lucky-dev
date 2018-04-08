@@ -56,22 +56,16 @@ namespace LuckyDev
             {
                 return CodeReviewCollection[name];
             }
-            else
-            {
-                return -1;
-            }
+
+            return -1;
         }
 
         public Dictionary<string, int> GetTopFive()
         {
-            var sortedDict = (from entry in CodeReviewCollection orderby entry.Value descending select entry).Take(5);
-            
-            // TODO: este paso seguramente se puede evitar, alguien que sepa linq seguramente sabe como hacerlo.
-            Dictionary<string, int> returnDictionary = new Dictionary<string, int>();
-            foreach (KeyValuePair<string, int> keyvalue in sortedDict)
-            {
-                returnDictionary.Add(keyvalue.Key, keyvalue.Value);
-            }
+            var returnDictionary = CodeReviewCollection
+                                    .OrderByDescending(t => t.Value)
+                                    .Take(5)
+                                    .ToDictionary(p => p.Key, q => q.Value);
 
             return returnDictionary;
         }

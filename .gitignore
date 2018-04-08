@@ -36,3 +36,5 @@ open-cover.xml
 # Unit testing files
 /xunit-console.proj
 /nunit-test-results.xml
+TestResults/
+
