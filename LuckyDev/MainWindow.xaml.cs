@@ -432,9 +432,9 @@ namespace LuckyDev
             {
                 this.TFSServer.Authenticate();
             }
-            catch
+            catch(Exception ex)
             {
-                MessageBox.Show("Usuario o contraseña inválido", this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Usuario o contraseña inválido" + ex.Message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
