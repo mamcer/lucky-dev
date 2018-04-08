@@ -43,7 +43,7 @@ namespace LuckyDev
             _store = null;
             _project = null;
 
-            if (AuthenticateUser() == false)
+            if (!AuthenticateUser())
             {
                 Application.Current.Shutdown(0);
             }

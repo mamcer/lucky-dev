@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuckyDev", "LuckyDev\LuckyDev.csproj", "{F2EE8EC2-37D0-4CD7-8155-7CD447F60AB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuckyDev", "src\LuckyDev\LuckyDev.csproj", "{F2EE8EC2-37D0-4CD7-8155-7CD447F60AB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuckyDev.Test", "LuckyDev.Test\LuckyDev.Test.csproj", "{7EDAD86B-E77B-4E49-AE1A-14CE70FDDB05}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuckyDev.Test", "src\LuckyDev.Test\LuckyDev.Test.csproj", "{7EDAD86B-E77B-4E49-AE1A-14CE70FDDB05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
