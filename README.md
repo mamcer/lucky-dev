@@ -1,4 +1,4 @@
-# AM aka Sound Golem
+# LuckyDev
 
 A .NET WPF application from 2009.
 
