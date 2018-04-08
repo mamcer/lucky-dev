@@ -5,70 +5,56 @@ namespace LuckyDev
 {
     public sealed class CodeReviews
     {
-        #region private members
-
-        private Dictionary<string, int> codeReviews;
-
-        #endregion 
+        private Dictionary<string, int> _codeReviews;
         
-        #region constructor
-
         public CodeReviews()
         {
-            this.codeReviews = null;
+            _codeReviews = null;
         }
-
-        #endregion
-
-        #region private properties
 
         private Dictionary<string, int> CodeReviewCollection
         {
             get
             {
-                if (this.codeReviews == null)
+                if (_codeReviews == null)
                 {
-                    this.codeReviews = new Dictionary<string, int>();
+                    _codeReviews = new Dictionary<string, int>();
                 }
 
-                return this.codeReviews;
+                return _codeReviews;
             }
         }
 
-        #endregion
-
-        #region public methods
-
         public void AddProjectMember(string name)
         {
-            if (!this.CodeReviewCollection.Keys.Contains(name))
+            if (!CodeReviewCollection.Keys.Contains(name))
             {
-                this.CodeReviewCollection.Add(name, 0);
+                CodeReviewCollection.Add(name, 0);
             }
         }
 
         public void ResetCodeReviews()
         {
-            List<string> keyList = this.CodeReviewCollection.Keys.ToList<string>();
+            List<string> keyList = CodeReviewCollection.Keys.ToList();
             foreach (string name in keyList)
             {
-                this.CodeReviewCollection[name] = 0;
+                CodeReviewCollection[name] = 0;
             }
         }
 
         public void AddCodeReview(string name)
         {
-            if (this.CodeReviewCollection.Keys.Contains(name))
+            if (CodeReviewCollection.Keys.Contains(name))
             {
-                this.CodeReviewCollection[name] += 1;
+                CodeReviewCollection[name] += 1;
             }
         }
 
         public int GetCodeReviewsForTeamMember(string name)
         {
-            if (this.CodeReviewCollection.Keys.Contains(name))
+            if (CodeReviewCollection.Keys.Contains(name))
             {
-                return this.CodeReviewCollection[name];
+                return CodeReviewCollection[name];
             }
             else
             {
@@ -78,7 +64,7 @@ namespace LuckyDev
 
         public Dictionary<string, int> GetTopFive()
         {
-            var sortedDict = (from entry in this.CodeReviewCollection orderby entry.Value descending select entry).Take(5);
+            var sortedDict = (from entry in CodeReviewCollection orderby entry.Value descending select entry).Take(5);
             
             // TODO: este paso seguramente se puede evitar, alguien que sepa linq seguramente sabe como hacerlo.
             Dictionary<string, int> returnDictionary = new Dictionary<string, int>();
@@ -92,17 +78,15 @@ namespace LuckyDev
 
         public List<string> GetTeamMembersWithoutCodeReviews()
         {
-            List<string> listResult = (from entry in this.CodeReviewCollection where entry.Value == 0 select entry.Key).ToList<string>();
+            List<string> listResult = (from entry in CodeReviewCollection where entry.Value == 0 select entry.Key).ToList();
             return listResult;
         }
 
         public List<string> GetTeamMembersWithLessCodeReviews()
         {
-            int lessCodeReviewNumber = (from entry in this.CodeReviewCollection orderby entry.Value ascending select entry.Value).First(); 
-            List<string> listResult = (from entry in this.CodeReviewCollection where entry.Value == lessCodeReviewNumber select entry.Key).ToList<string>();
+            int lessCodeReviewNumber = (from entry in CodeReviewCollection orderby entry.Value ascending select entry.Value).First(); 
+            List<string> listResult = (from entry in CodeReviewCollection where entry.Value == lessCodeReviewNumber select entry.Key).ToList();
             return listResult;
         }
-
-        #endregion
     }
 }

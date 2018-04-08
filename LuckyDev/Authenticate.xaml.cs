@@ -3,43 +3,24 @@ using System.Windows.Input;
 
 namespace LuckyDev
 {
-    /// <summary>
-    /// Interaction logic for Authenticate.xaml
-    /// </summary>
-    public partial class Authenticate : Window
+    public partial class Authenticate
     {
-        #region constructor
-
         public Authenticate(string user)
         {
             InitializeComponent();
             
             if (user != string.Empty)
             {
-                this.txtUser.Text = user;
-                this.txtPassword.Focus();
+                txtUser.Text = user;
+                txtPassword.Focus();
             }
             else
             {
-                this.txtUser.Focus();
+                txtUser.Focus();
             }
         }
 
-        #endregion
-
-        #region public properties
-       
-        public string Password
-        {
-            get
-            {
-                return this.txtPassword.Password;
-            }
-        }
-
-        #endregion
-
-        #region private methods
+        public string Password => txtPassword.Password;
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
@@ -48,7 +29,7 @@ namespace LuckyDev
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
-            this.CheckNullPassword();
+            CheckNullPassword();
         }
 
         private void CheckNullPassword()
@@ -64,7 +45,7 @@ namespace LuckyDev
             }
         }
 
-        private void Key_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void Key_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
@@ -72,19 +53,12 @@ namespace LuckyDev
             }
         }
 
-        private void BtnClose_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            DialogResult = false;
-        }
-
         private void TxtPassword_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                this.CheckNullPassword();
+                CheckNullPassword();
             }
         }
-
-        #endregion
     }
 }

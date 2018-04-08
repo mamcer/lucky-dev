@@ -5,26 +5,17 @@ using System.Windows.Media.Animation;
 
 namespace LuckyDev
 {
-    /// <summary>
-    /// Interaction logic for About.xaml
-    /// </summary>
-    public partial class About : Window
+    public partial class About
     {
-        #region constructor
-
         public About()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
-
-        #endregion
-
-        #region private methods
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
             Storyboard closeAnimation = (Storyboard)FindResource("CloseAnimation");
-            closeAnimation.Completed += new EventHandler(this.CloseAnimation_Completed);
+            closeAnimation.Completed += CloseAnimation_Completed;
             closeAnimation.Begin(this);
         }
 
@@ -33,18 +24,12 @@ namespace LuckyDev
             DialogResult = true;
         }
 
-        private void Label_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-        }
-
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                this.DragMove();
+                DragMove();
             }
         }
-
-        #endregion
     }
 }

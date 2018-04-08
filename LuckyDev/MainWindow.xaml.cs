@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Avalon.Windows.Controls;
@@ -19,48 +18,41 @@ using Microsoft.Win32;
 
 namespace LuckyDev
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        #region private members
-
-        private string uri;
-        private string projectName;
-        private TeamFoundationServer server;
-        private WorkItemStore store;
-        private Project project;
-        private CodeReviews codeReviews;
-        private BackgroundWorker backgroundWorker;
-        private bool showBallonTooltip;
-        private RegistryKey runRegistryKey = null;
-
-        #endregion
-
-        #region constructor
+        private string _uri;
+        private string _projectName;
+        private TeamFoundationServer _server;
+        private WorkItemStore _store;
+        private Project _project;
+        private CodeReviews _codeReviews;
+        private BackgroundWorker _backgroundWorker;
+        private RegistryKey _runRegistryKey;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            if (string.IsNullOrEmpty(this.TFSUri) || string.IsNullOrEmpty(this.TFSProjectName))
+            if (string.IsNullOrEmpty(TfsUri) || string.IsNullOrEmpty(TfsProjectName))
             {
-                MessageBox.Show("Falta la definición de la URI del servidor TFS o el nombre del proyecto TFS en el archivo de configuración.\nLa aplicación no puede continuar", this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Falta la definición de la URI del servidor TFS o el nombre del proyecto TFS en el archivo de configuración.\nLa aplicación no puede continuar", Title, MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown(0);
             }
 
-            this.server = null;
-            this.store = null;
-            this.project = null;
+            _server = null;
+            _store = null;
+            _project = null;
 
-            if (this.AuthenticateUser() == false)
+            if (AuthenticateUser() == false)
             {
                 Application.Current.Shutdown(0);
             }
             else
             {
-                this.RunReviewBackgroundWorker();
+                RunReviewBackgroundWorker();
             }
 
-            if (this.RunRegistryKey.GetValue("LuckyDev") == null)
+            if (RunRegistryKey.GetValue("LuckyDev") == null)
             {
                 MIStartWithWindows.IsChecked = false;
             }
@@ -69,121 +61,105 @@ namespace LuckyDev
                 MIStartWithWindows.IsChecked = true;
             }
 
-            this.RunRegistryKey = null;
+            RunRegistryKey = null;
 
-            this.Loaded += new RoutedEventHandler(this.MainWindow_Loaded);
+            Loaded += MainWindow_Loaded;
         }
 
-        #endregion
+        private static string TfsUser => ConfigurationManager.AppSettings["TFSUser"];
 
-        #region private properties
+        private static string TfsPassword => ConfigurationManager.AppSettings["TFSPassword"];
 
-        private string TFSUser
-        {
-            get
-            { 
-                return ConfigurationManager.AppSettings["TFSUser"];
-            }
-        }
-
-        private string TFSPassword
+        private string TfsUri
         {
             get
             {
-                return ConfigurationManager.AppSettings["TFSPassword"];
-            }
-        }
-
-        private string TFSUri
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(this.uri))
+                if (string.IsNullOrEmpty(_uri))
                 {
                     try
                     {
-                        this.uri = ConfigurationManager.AppSettings["TFSUri"];
+                        _uri = ConfigurationManager.AppSettings["TFSUri"];
                     }
                     catch
                     {
-                        this.uri = string.Empty;
+                        _uri = string.Empty;
                     }
                 }
 
-                return this.uri;
+                return _uri;
             }
         }
 
-        private string TFSProjectName
+        private string TfsProjectName
         {
             get
             {
-                if (string.IsNullOrEmpty(this.projectName))
+                if (string.IsNullOrEmpty(_projectName))
                 {
                     try
                     {
-                        this.projectName = ConfigurationManager.AppSettings["TFSProject"];
+                        _projectName = ConfigurationManager.AppSettings["TFSProject"];
                     }
                     catch
                     {
-                        this.projectName = string.Empty;
+                        _projectName = string.Empty;
                     }
                 }
 
-                return this.projectName;
+                return _projectName;
             }
         }
 
-        private TeamFoundationServer TFSServer
+        private TeamFoundationServer TfsServer
         {
             get
             {
-                if (this.server == null)
+                if (_server == null)
                 {
-                    NetworkCredential credentials = this.GetTFSNetworkCredential();
+                    NetworkCredential credentials = GetTfsNetworkCredential();
                     if (credentials != null)
                     {
-                        this.server = new TeamFoundationServer(this.TFSUri, credentials);
+                        _server = new TeamFoundationServer(TfsUri, credentials);
                     }
                     else
                     {
-                        this.server = null;
+                        _server = null;
                     }
                 }
 
-                return this.server;
+                return _server;
             }
         }
 
-        private WorkItemStore TFSItemStore
+        private WorkItemStore TfsItemStore
         {
             get
             {
-                if (this.store == null)
+                if (_store == null)
                 {
-                    if (this.TFSServer != null)
+                    if (TfsServer != null)
                     {
-                        this.store = (WorkItemStore)this.TFSServer.GetService(typeof(WorkItemStore));
+                        _store = (WorkItemStore)TfsServer.GetService(typeof(WorkItemStore));
                     }
                 }
 
-                return this.store;
+                return _store;
             }
         }
 
-        private Project TFSProject
+        private Project TfsProject
         {
             get
             {
-                if (this.project == null)
+                if (_project == null)
                 {
-                    if (this.TFSItemStore != null)
+                    if (TfsItemStore != null)
                     {
-                        this.project = this.TFSItemStore.Projects[this.TFSProjectName];
+                        _project = TfsItemStore.Projects[TfsProjectName];
                     }
                 }
 
-                return this.project;
+                return _project;
             }
         }
 
@@ -191,49 +167,30 @@ namespace LuckyDev
         {
             get
             {
-                if (this.codeReviews == null)
+                if (_codeReviews == null)
                 {
-                    this.codeReviews = new CodeReviews();
+                    _codeReviews = new CodeReviews();
                 }
 
-                return this.codeReviews;
+                return _codeReviews;
             }
         }
 
-        private bool ShowBallonTooltip
-        {
-            get
-            {
-                return this.showBallonTooltip;
-            }
-
-            set
-            {
-                this.showBallonTooltip = value;
-            }
-        }
+        private bool ShowBallonTooltip { get; set; }
 
         private RegistryKey RunRegistryKey
         {
             get
             {
-                if (this.runRegistryKey == null)
+                if (_runRegistryKey == null)
                 {
-                    this.runRegistryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                    _runRegistryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                 }
 
-                return this.runRegistryKey;
+                return _runRegistryKey;
             }
-
-            set
-            {
-                this.runRegistryKey = value;
-            }
+            set => _runRegistryKey = value;
         }
-
-        #endregion
-
-        #region private methods
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -243,139 +200,139 @@ namespace LuckyDev
 
                 if (parameter == "/minimized")
                 {
-                    this.WindowState = WindowState.Minimized;
-                    this.ShowInTaskbar = false;
+                    WindowState = WindowState.Minimized;
+                    ShowInTaskbar = false;
                 }
             }
         }
 
         private void RunReviewBackgroundWorker()
         {
-            this.lstNoCodeReviews.Items.Clear();
-            this.top01.Content = string.Empty;
-            this.top02.Content = string.Empty;
-            this.top03.Content = string.Empty;
-            this.top04.Content = string.Empty;
-            this.top05.Content = string.Empty;
-            this.lblWinnerIs.Content = string.Empty;
-            this.lblUpdate.IsEnabled = false;
-            this.btnLuckyDev.IsEnabled = false;
-            this.backgroundWorker = new BackgroundWorker();
-            this.backgroundWorker.DoWork += this.BackgroundWorker_DoWork;
-            this.backgroundWorker.RunWorkerCompleted += this.BackgroundWorker_RunWorkerCompleted;
-            this.backgroundWorker.RunWorkerAsync();
+            lstNoCodeReviews.Items.Clear();
+            top01.Content = string.Empty;
+            top02.Content = string.Empty;
+            top03.Content = string.Empty;
+            top04.Content = string.Empty;
+            top05.Content = string.Empty;
+            lblWinnerIs.Content = string.Empty;
+            lblUpdate.IsEnabled = false;
+            btnLuckyDev.IsEnabled = false;
+            _backgroundWorker = new BackgroundWorker();
+            _backgroundWorker.DoWork += BackgroundWorker_DoWork;
+            _backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
+            _backgroundWorker.RunWorkerAsync();
         }
         
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            this.AddProjectMembers();
-            this.RetrieveCodeReviews();
+            AddProjectMembers();
+            RetrieveCodeReviews();
         }
 
         private void BackgroundWorker_RunWorkerCompleted(
             object sender,
             RunWorkerCompletedEventArgs e)
         {
-            this.UpdateReviews();
-            this.backgroundWorker.DoWork -= this.BackgroundWorker_DoWork;
-            this.backgroundWorker.RunWorkerCompleted -= this.BackgroundWorker_RunWorkerCompleted;
-            this.backgroundWorker.Dispose();
+            UpdateReviews();
+            _backgroundWorker.DoWork -= BackgroundWorker_DoWork;
+            _backgroundWorker.RunWorkerCompleted -= BackgroundWorker_RunWorkerCompleted;
+            _backgroundWorker.Dispose();
         }
 
         private void UpdateReviews()
         {
             // The Work to perform on another thread
-            ThreadStart start = delegate
-                                    {
-                                        Dispatcher.Invoke(DispatcherPriority.Normal, new Action(this.UpdateUI));
-                                    };
+            void Start()
+            {
+                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(UpdateUi));
+            }
 
-            new Thread(start).Start();
+            new Thread(Start).Start();
         }
 
-        private void UpdateUI()
+        private void UpdateUi()
         {
-            Dictionary<string, int> topFive = this.CodeReviewCollection.GetTopFive();
+            Dictionary<string, int> topFive = CodeReviewCollection.GetTopFive();
             string[] members = topFive.Keys.ToArray();
             if (topFive[members[0]] > 0)
             {
-                this.top01.Content = string.Format("{0} ({1})", members[0], topFive[members[0]]);
+                top01.Content = $"{members[0]} ({topFive[members[0]]})";
             }
             else
             {
-                this.top01.Content = string.Empty;
+                top01.Content = string.Empty;
             }
 
             if (topFive[members[1]] > 0)
             {
-                this.top02.Content = string.Format("{0} ({1})", members[1], topFive[members[1]]);
+                top02.Content = $"{members[1]} ({topFive[members[1]]})";
             }
             else
             {
-                this.top02.Content = string.Empty;
+                top02.Content = string.Empty;
             }
 
             if (topFive[members[2]] > 0)
             {
-                this.top03.Content = string.Format("{0} ({1})", members[2], topFive[members[2]]);
+                top03.Content = $"{members[2]} ({topFive[members[2]]})";
             }
             else
             {
-                this.top03.Content = string.Empty;
+                top03.Content = string.Empty;
             }
 
             if (topFive[members[3]] > 0)
             {
-                this.top04.Content = string.Format("{0} ({1})", members[3], topFive[members[3]]);
+                top04.Content = $"{members[3]} ({topFive[members[3]]})";
             }
             else
             {
-                this.top04.Content = string.Empty;
+                top04.Content = string.Empty;
             }
 
             if (topFive[members[4]] > 0)
             {
-                this.top05.Content = string.Format("{0} ({1})", members[4], topFive[members[4]]);
+                top05.Content = $"{members[4]} ({topFive[members[4]]})";
             }
             else
             {
-                this.top05.Content = string.Empty;
+                top05.Content = string.Empty;
             }
 
-            List<string> noCodeReviews = this.CodeReviewCollection.GetTeamMembersWithoutCodeReviews();
+            List<string> noCodeReviews = CodeReviewCollection.GetTeamMembersWithoutCodeReviews();
             if (noCodeReviews.Count > 0)
             {
                 foreach (string member in noCodeReviews)
                 {
-                    this.lstNoCodeReviews.Items.Add(member);
+                    lstNoCodeReviews.Items.Add(member);
                 }
             }
             else
             {
-                List<string> lessCodeReviews = this.CodeReviewCollection.GetTeamMembersWithLessCodeReviews();
-                MessageBox.Show("No existen personas sin code review asignados.\nSe muestran las personas que tienen menos code reviews pendientes", this.Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                List<string> lessCodeReviews = CodeReviewCollection.GetTeamMembersWithLessCodeReviews();
+                MessageBox.Show("No existen personas sin code review asignados.\nSe muestran las personas que tienen menos code reviews pendientes", Title, MessageBoxButton.OK, MessageBoxImage.Information);
                 foreach (string member in lessCodeReviews)
                 {
-                    this.lstNoCodeReviews.Items.Add(member);
+                    lstNoCodeReviews.Items.Add(member);
                 }
             }
 
-            this.lblUpdate.IsEnabled = true;
-            this.btnLuckyDev.IsEnabled = true;
-            if (this.ShowBallonTooltip)
+            lblUpdate.IsEnabled = true;
+            btnLuckyDev.IsEnabled = true;
+            if (ShowBallonTooltip)
             {
-                this.notifyIcon.ShowBalloonTip(10000, "The winner is", this.GiveMeAReviewer(), NotifyBalloonIcon.Info);
-                this.ShowBallonTooltip = false;
+                notifyIcon.ShowBalloonTip(10000, "The winner is", GiveMeAReviewer(), NotifyBalloonIcon.Info);
+                ShowBallonTooltip = false;
             }
         }
 
         private void RetrieveCodeReviews()
         {
-            WorkItemCollection reviews = this.RetrieveWorkItems();
+            RetrieveWorkItems();
 
-            foreach (WorkItem wi in this.RetrieveWorkItems())
+            foreach (WorkItem wi in RetrieveWorkItems())
             {
-                this.CodeReviewCollection.AddCodeReview(wi["Required Attendee 1"].ToString());
+                CodeReviewCollection.AddCodeReview(wi["Required Attendee 1"].ToString());
             }
         }
 
@@ -385,7 +342,7 @@ namespace LuckyDev
             string[] teamMembers = projectMembers.Split(';');
             foreach (string teamMember in teamMembers)
             {
-                this.CodeReviewCollection.AddProjectMember(teamMember);
+                CodeReviewCollection.AddProjectMember(teamMember);
             }
         }
 
@@ -402,17 +359,17 @@ namespace LuckyDev
             }
         }
 
-        private NetworkCredential GetTFSNetworkCredential()
+        private NetworkCredential GetTfsNetworkCredential()
         {
-            string user = this.TFSUser;
-            string password = this.TFSPassword;
+            string user = TfsUser;
+            string password = TfsPassword;
 
             if (string.IsNullOrEmpty(password))
             {
                 // si ingresa 3 veces mal el password, chau
                 for (int i = 0; i < 3 && string.IsNullOrEmpty(password); i++)
                 {
-                    password = this.GiveMeAValidPassword(user);
+                    password = GiveMeAValidPassword(user);
                 }
             }
 
@@ -430,11 +387,11 @@ namespace LuckyDev
         {
             try
             {
-                this.TFSServer.Authenticate();
+                TfsServer.Authenticate();
             }
             catch(Exception ex)
             {
-                MessageBox.Show("Usuario o contraseña inválido" + ex.Message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Usuario o contraseña inválido" + ex.Message, Title, MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -443,7 +400,7 @@ namespace LuckyDev
 
         private void BtnLuckyDev_Click(object sender, RoutedEventArgs e)
         {
-            this.lblWinnerIs.Content = this.GiveMeAReviewer() + " ";
+            lblWinnerIs.Content = GiveMeAReviewer() + " ";
         }
 
         private string GiveMeAReviewer()
@@ -463,9 +420,9 @@ namespace LuckyDev
 
         private WorkItemCollection RetrieveWorkItems()
         {
-            Hashtable parameters = this.BuildParameters();
-            string query = this.BuildQuery();
-            return this.TFSItemStore.Query(query, parameters);
+            Hashtable parameters = BuildParameters();
+            string query = BuildQuery();
+            return TfsItemStore.Query(query, parameters);
         }
 
         private string BuildQuery()
@@ -482,8 +439,7 @@ namespace LuckyDev
 
         private Hashtable BuildParameters()
         {
-            Hashtable parameters = new Hashtable();
-            parameters.Add("project", this.TFSProject.Name);
+            Hashtable parameters = new Hashtable {{"project", TfsProject.Name}};
             return parameters;
         }
 
@@ -499,23 +455,23 @@ namespace LuckyDev
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                this.DragMove();
+                DragMove();
             }
         }
 
         private void LblAbout_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.ShowAboutBox();
+            ShowAboutBox();
         }
 
         private void ShowAboutBox()
         {
             About about = new About();
-            this.Effect = new System.Windows.Media.Effects.BlurEffect();
+            Effect = new System.Windows.Media.Effects.BlurEffect();
             about.ShowDialog();
-            this.Effect = null;
+            Effect = null;
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -525,47 +481,47 @@ namespace LuckyDev
 
         private void LblUpdate_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.CodeReviewCollection.ResetCodeReviews();
-            this.RunReviewBackgroundWorker();
+            CodeReviewCollection.ResetCodeReviews();
+            RunReviewBackgroundWorker();
         }
 
         private void NotifyIcon_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            this.ShowMainWindow();
+            ShowMainWindow();
         }
 
         private void ShowMainWindow()
         {
-            if (this.WindowState == WindowState.Minimized)
+            if (WindowState == WindowState.Minimized)
             {
-                this.CodeReviewCollection.ResetCodeReviews();
-                this.RunReviewBackgroundWorker();
-                this.WindowState = WindowState.Normal;
-                this.ShowInTaskbar = true;
+                CodeReviewCollection.ResetCodeReviews();
+                RunReviewBackgroundWorker();
+                WindowState = WindowState.Normal;
+                ShowInTaskbar = true;
             }
         }
 
         private void BtnToSystray_Click(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
-            this.ShowInTaskbar = false;
+            WindowState = WindowState.Minimized;
+            ShowInTaskbar = false;
         }
 
         private void MIShow_Click(object sender, RoutedEventArgs e)
         {
-            this.ShowMainWindow();
+            ShowMainWindow();
         }
 
         private void MIAbout_Click(object sender, RoutedEventArgs e)
         {
-            this.ShowAboutBox();
+            ShowAboutBox();
         }
 
         private void MIReviewer_Click(object sender, RoutedEventArgs e)
         {
-            this.CodeReviewCollection.ResetCodeReviews();
-            this.RunReviewBackgroundWorker();
-            this.ShowBallonTooltip = true;
+            CodeReviewCollection.ResetCodeReviews();
+            RunReviewBackgroundWorker();
+            ShowBallonTooltip = true;
         }
 
         private void MIExit_Click(object sender, RoutedEventArgs e)
@@ -578,14 +534,12 @@ namespace LuckyDev
             bool isRunAtStartupChecked = MIStartWithWindows.IsChecked;
             if (isRunAtStartupChecked)
             {
-                this.RunRegistryKey.SetValue("LuckyDev", "\"" + Assembly.GetExecutingAssembly().Location + "\" /minimized");
+                RunRegistryKey.SetValue("LuckyDev", "\"" + Assembly.GetExecutingAssembly().Location + "\" /minimized");
             }
             else
             {
-                this.RunRegistryKey.DeleteValue("LuckyDev", false);
+                RunRegistryKey.DeleteValue("LuckyDev", false);
             }
         }
-        
-        #endregion
     }
 }
