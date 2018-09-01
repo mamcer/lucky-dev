@@ -65,8 +65,7 @@
 				</Grid.RenderTransform>
 				<Label Margin="8,8,121,0" VerticalAlignment="Top" Height="28" Content="Lucky Dev, los Code Reviews" FontSize="14.667"/>
 				<Label Margin="8,0,0,20" Content="Mario Moreno" Foreground="Blue" HorizontalAlignment="Left" Width="91" VerticalAlignment="Bottom" Height="30" Cursor="Hand" />
-				<Label Margin="8,0,140,6" Content="Bollorian code monkey" VerticalAlignment="Bottom" Height="25"/>
-				<Label Margin="8,36,0,0" VerticalAlignment="Top" Height="26" Content="versión 0.9b" FontSize="9.333" HorizontalAlignment="Left" Width="72"/>
+            <Label Margin="8,36,0,0" VerticalAlignment="Top" Height="26" Content="versión 0.9b" FontSize="9.333" HorizontalAlignment="Left" Width="72"/>
 				<Button x:Name="btnOk" HorizontalAlignment="Right" Margin="0,0,8,6" Width="97" Content="Aceptar" VerticalAlignment="Bottom" Height="23" Click="BtnOk_Click" />
 			</Grid>
 	</Border>

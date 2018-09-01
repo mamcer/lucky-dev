@@ -6,7 +6,7 @@ In `original` branch you will find the original source code for this application
 
 ## Description
 
-In 2009 I used to work in a project which uses TFS as source control and issue tracker. In particular we started to implement code reviews (still not supported built-in by the tool) we basically define who will be the code reviewer for every commit. The application basically connects to TFS and define the best option for your code review (based on the amount of code reviews already assigned to all the developers) the developer with less code reviews is the next Lucky Dev.
+In 2009 I used to work in a project which uses TFS as source control and issue tracker. In particular we started to implement code reviews (still not supported built-in by the tool) we manually defined who will be the code reviewer for every check in. The application  connects to TFS and define the best option for your code review based on the amount of code reviews already assigned to every developers. The developer with less code reviews at that moment is the next 'Lucky Dev'.
 
 The code was initially hosted in a TFS 2008 instance then moved to Visual Studio Team Services (TFS Preview at that moment) 
 
